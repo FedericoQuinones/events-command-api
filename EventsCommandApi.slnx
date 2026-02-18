@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="events-command-api/EventsCommandApi.Api.csproj" />
+    <Project Path="EventsCommandApi.Application/EventsCommandApi.Application.csproj" Id="ee817c86-cd46-4727-8b25-ff02ddec9ef7" />
+    <Project Path="EventsCommandApi.Domain/EventsCommandApi.Domain.csproj" Id="779717cf-8e45-4da1-bf5f-139a61c6c260" />
+    <Project Path="EventsCommandApi.Infrastructure/EventsCommandApi.Infrastructure.csproj" Id="92ddb4cc-77eb-41bd-81a5-5f35c96ff8d0" />
+  </Folder>
+</Solution>

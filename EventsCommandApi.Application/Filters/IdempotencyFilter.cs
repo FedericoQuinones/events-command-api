@@ -1,6 +1,8 @@
+using EventsCommandApi.Application.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using EventsCommandApi.Application.DTOs;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +11,12 @@ namespace EventsCommandApi.Application.Filters
     public sealed class IdempotencyFilter : IAsyncActionFilter
     {
         private readonly IMemoryCache _cache;
-        private readonly TimeSpan _cacheDuration = TimeSpan.FromHours(24);
+        private readonly TimeSpan _cacheDuration;
 
-        public IdempotencyFilter(IMemoryCache cache)
+        public IdempotencyFilter(IMemoryCache cache, IOptions<IdempotencyCacheOptions> options)
         {
             _cache = cache;
+            _cacheDuration = TimeSpan.FromHours(options.Value.CacheDurationHours);
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -50,7 +53,14 @@ namespace EventsCommandApi.Application.Filters
                     Body = objectResult.Value
                 };
 
-                _cache.Set(key, response, _cacheDuration);
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = _cacheDuration,
+                    Size = 1,
+                    Priority = CacheItemPriority.Normal
+                };
+
+                _cache.Set(key, response, cacheEntryOptions);
             }
         }
     }

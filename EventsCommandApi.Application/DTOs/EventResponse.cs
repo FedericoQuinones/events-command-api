@@ -6,6 +6,7 @@ namespace EventsCommandApi.Application.DTOs
         string Payload,
         string Status,
         DateTime CreatedAt,
+        DateTime UpdatedAt,
         int Version
     );
 }

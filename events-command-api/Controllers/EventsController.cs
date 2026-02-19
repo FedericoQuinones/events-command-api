@@ -1,6 +1,5 @@
-﻿using EventsCommandApi.Application.Common.Interfaces;
+﻿using EventsCommandApi.Application.Filters;
 using EventsCommandApi.Application.UseCases;
-using EventsCommandApi.Application.Filters;
 using EventsCommandApi.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
@@ -17,6 +16,26 @@ namespace EventsCommandApi.Api.Controllers
         {
             _mediator = mediator;
             _logger = logger;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<EventResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetEvents(CancellationToken ct)
+        {
+            try
+            {
+                var command = new GetEventsCommand();
+                var response = await _mediator.Send(command, ct);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error finding the events.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { error = "An error occurred while creating the event" });
+            }
         }
 
         [HttpPost]

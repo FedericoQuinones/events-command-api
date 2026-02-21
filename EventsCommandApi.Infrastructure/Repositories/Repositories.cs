@@ -21,7 +21,9 @@ namespace EventsCommandApi.Infrastructure.Repositories
             => await _context.FindAllAsync<Event>(_collectionName, ct);
 
         public async Task<Event?> GetByIdAsync(string id, CancellationToken ct = default)
-            => await _context.FindByIdAsync<Event>(_collectionName, id, ct);
+        {
+            return await _context.FindByIdAsync<Event>(_collectionName, id, ct);
+        }
 
         public async Task<string> CreateAsync(Event @event, CancellationToken ct = default)
             => await _context.InsertAsync(_collectionName, @event, ct);
@@ -30,6 +32,8 @@ namespace EventsCommandApi.Infrastructure.Repositories
             => await _context.UpdateAsync(_collectionName, @event.Id, @event, ct);
 
         public async Task DeleteAsync(string id, CancellationToken ct = default)
-            => await _context.DeleteAsync<Event>(_collectionName, id, ct);
+        {
+            await _context.DeleteAsync<Event>(_collectionName, id, ct);
+        }
     }
 }

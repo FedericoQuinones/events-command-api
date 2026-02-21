@@ -1,9 +1,13 @@
 ﻿using EventsCommandApi.Domain.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace EventsCommandApi.Domain.Entities
 {
     public class Event
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public StatusEvent Status { get; private set; }

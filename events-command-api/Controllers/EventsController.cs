@@ -1,5 +1,5 @@
-﻿using EventsCommandApi.Application.Filters;
-using EventsCommandApi.Application.UseCases;
+﻿using EventsCommandApi.Application.UseCases;
+using EventsCommandApi.Application.Filters;
 using EventsCommandApi.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
@@ -33,6 +33,31 @@ namespace EventsCommandApi.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error finding the events.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { error = "An error occurred while creating the event" });
+            }
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(EventResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetEventById(string id, CancellationToken ct)
+        {
+            try
+            {
+                var command = new GetEventsByIdCommand(id);
+                var response = await _mediator.Send(command, ct);
+                return Ok(response);
+            }
+            catch (KeyNotFoundException)
+            {
+                _logger.LogWarning("Event with id {Id} not found", id);
+                return NotFound(new { error = $"Event with id '{id}' not found." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error finding the event.");
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { error = "An error occurred while creating the event" });
             }

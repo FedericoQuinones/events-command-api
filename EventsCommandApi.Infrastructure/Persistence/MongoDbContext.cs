@@ -1,7 +1,6 @@
 ﻿using EventsCommandApi.Application.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using MongoDB.Bson;
 
 namespace EventsCommandApi.Infrastructure.Persistence
 {
@@ -25,7 +24,7 @@ namespace EventsCommandApi.Infrastructure.Persistence
         public async Task<T?> FindByIdAsync<T>(string collectionName, string id, CancellationToken ct = default) where T : class
         {
             var collection = _database.GetCollection<T>(collectionName);
-            var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+            var filter = Builders<T>.Filter.Eq("Id", id);
             return await collection.Find(filter).FirstOrDefaultAsync(ct);
         }
 
@@ -46,14 +45,14 @@ namespace EventsCommandApi.Infrastructure.Persistence
         public async Task UpdateAsync<T>(string collectionName, string id, T entity, CancellationToken ct = default) where T : class
         {
             var collection = _database.GetCollection<T>(collectionName);
-            var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+            var filter = Builders<T>.Filter.Eq("Id", id);
             await collection.ReplaceOneAsync(filter, entity, cancellationToken: ct);
         }
 
         public async Task DeleteAsync<T>(string collectionName, string id, CancellationToken ct = default) where T : class
         {
             var collection = _database.GetCollection<T>(collectionName);
-            var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+            var filter = Builders<T>.Filter.Eq("Id", id);
             await collection.DeleteOneAsync(filter, ct);
         }
 

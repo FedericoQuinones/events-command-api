@@ -49,11 +49,13 @@ namespace EventsCommandApi.Infrastructure.Persistence
             await collection.ReplaceOneAsync(filter, entity, cancellationToken: ct);
         }
 
-        public async Task DeleteAsync<T>(string collectionName, string id, CancellationToken ct = default) where T : class
+        public async Task<long> DeleteAsync<T>(string collectionName, string id, CancellationToken ct = default) where T : class
         {
             var collection = _database.GetCollection<T>(collectionName);
-            var filter = Builders<T>.Filter.Eq("Id", id);
-            await collection.DeleteOneAsync(filter, ct);
+            var filter = Builders<T>.Filter.Eq("_id", id);
+            var result = await collection.DeleteOneAsync(filter, ct);
+            
+            return result.DeletedCount;
         }
 
         public void Dispose() { }

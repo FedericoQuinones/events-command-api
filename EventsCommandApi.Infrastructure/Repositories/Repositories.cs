@@ -31,9 +31,7 @@ namespace EventsCommandApi.Infrastructure.Repositories
         public async Task UpdateAsync(Event @event, CancellationToken ct = default)
             => await _context.UpdateAsync(_collectionName, @event.Id, @event, ct);
 
-        public async Task DeleteAsync(string id, CancellationToken ct = default)
-        {
-            await _context.DeleteAsync<Event>(_collectionName, id, ct);
-        }
+        public async Task<long> DeleteAsync(string id, CancellationToken ct = default)
+            => await _context.DeleteAsync<Event>(_collectionName, id, ct);
     }
 }

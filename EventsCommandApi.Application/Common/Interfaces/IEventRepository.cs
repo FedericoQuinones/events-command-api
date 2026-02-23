@@ -8,6 +8,6 @@ namespace EventsCommandApi.Application.Common.Interfaces
         Task<Event?> GetByIdAsync(string id, CancellationToken ct = default);
         Task<string> CreateAsync(Event @event, CancellationToken ct = default);
         Task UpdateAsync(Event @event, CancellationToken ct = default);
-        Task DeleteAsync(string id, CancellationToken ct = default);
+        Task<long> DeleteAsync(string id, CancellationToken ct = default);
     }
 }

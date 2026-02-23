@@ -20,7 +20,7 @@ namespace EventsCommandApi.Domain.Entities
 
         public Event(string name, string payload)
         {
-            Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
+            Id = ObjectId.GenerateNewId().ToString();
             Name = name;
             Payload = payload;
             Status = StatusEvent.New;

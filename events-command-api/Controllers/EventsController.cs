@@ -32,9 +32,9 @@ namespace EventsCommandApi.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error finding the events.");
+                _logger.LogError(ex, "Error retrieving events.");
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { error = "An error occurred while creating the event" });
+                    new { error = "An error occurred while retrieving the events" });
             }
         }
 
@@ -52,14 +52,13 @@ namespace EventsCommandApi.Api.Controllers
             }
             catch (KeyNotFoundException)
             {
-                _logger.LogWarning("Event with id {Id} not found", id);
                 return NotFound(new { error = $"Event with id '{id}' not found." });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error finding the event.");
+                _logger.LogError(ex, "Error retrieving event with id {Id}.", id);
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { error = "An error occurred while creating the event" });
+                    new { error = "An error occurred while retrieving the event" });
             }
         }
 
@@ -83,6 +82,30 @@ namespace EventsCommandApi.Api.Controllers
                 _logger.LogError(ex, "Error creating event. Name: {EventName}", request.Name);
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { error = "An error occurred while creating the event" });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteEventById(string id, CancellationToken ct)
+        {
+            try
+            {
+                var command = new DeleteEventByIdCommand(id);
+                await _mediator.Send(command, ct);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { error = $"Event with id '{id}' not found." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting the event.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { error = "An error occurred while deleting the event" });
             }
         }
     }

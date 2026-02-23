@@ -108,6 +108,30 @@ namespace EventsCommandApi.Api.Controllers
                     new { error = "An error occurred while deleting the event" });
             }
         }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateEventById(string id, [FromBody] UpdateEventRequest request, CancellationToken ct)
+        {
+            try
+            {
+                var command = new UpdateEventByIdCommand(id, request.Payload);
+                await _mediator.Send(command, ct);
+                return Accepted("Evento actualizado");
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { error = $"Event with id '{id}' not found." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating the event.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { error = "An error occurred while updating the event" });
+            }
+        }
     }
 }
 

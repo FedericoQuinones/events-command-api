@@ -1,6 +1,6 @@
-﻿using EventsCommandApi.Domain.Enums;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using EventsCommandApi.Domain.Enums;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace EventsCommandApi.Domain.Entities
 {
